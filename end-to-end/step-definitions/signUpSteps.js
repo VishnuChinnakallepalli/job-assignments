@@ -6,8 +6,8 @@ import signUpData from '../pageObjectModal/tests/data/signUpData.json' assert { 
 
 const { Given, When, Then } = createBdd(test);
 
-const validData = signUpData.filter(d => !d.isInvalid);
-const invalidData = signUpData.find(d => d.isInvalid);
+const validData = ParaBankPage.getValidUsers(signUpData);
+const invalidData = ParaBankPage.getInvalidUser(signUpData);
 
 // ── Background ─────────────────────────────────────────────────────────────────
 

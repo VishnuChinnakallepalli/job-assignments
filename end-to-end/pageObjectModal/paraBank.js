@@ -95,7 +95,7 @@ export class ParaBankPage {
      * @returns {any}
      */
     static getRandomValidUser(signUpData) {
-        const validUsers = signUpData.filter(user => !user.isInvalid);
+        const validUsers = ParaBankPage.getValidUsers(signUpData);
         return validUsers[Math.floor(Math.random() * validUsers.length)];
     }
 
