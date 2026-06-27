@@ -59,14 +59,14 @@ When('the user fills the registration form with invalid details', async ({ paraB
   await paraBank.fillRegistrationForm({ ...invalidData, username });
 });
 
-Then('any validation errors on the page should be logged', async ({ page }) => {
-  const errorCount = await page.locator('span.error').count();
+Then('any validation errors on the page should be logged', async ({ paraBank }) => {
+  const errorCount = await paraBank.page.locator('span.error').count();
   if (errorCount === 0) {
     console.log('Observation: No validation errors shown even after submitting invalid details.');
   } else {
     console.log(`Found ${errorCount} error messages on the page.`);
     for (let i = 0; i < errorCount; i++) {
-      const errorText = await page.locator('span.error').nth(i).textContent();
+      const errorText = await paraBank.page.locator('span.error').nth(i).textContent();
       console.log(`Error ${i + 1}: ${errorText}`);
     }
   }
@@ -82,8 +82,8 @@ When('the user fills the registration form with valid details', async ({ paraBan
   await paraBank.fillRegistrationForm({ ...userData, username });
 });
 
-When('the user refreshes the page', async ({ page }) => {
-  await page.reload();
+When('the user refreshes the page', async ({ paraBank }) => {
+  await paraBank.page.goto(paraBank.page.url());
 });
 
 Then('all registration form fields should be empty', async ({ paraBank }) => {
