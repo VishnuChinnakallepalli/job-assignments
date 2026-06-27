@@ -1,0 +1,58 @@
+[
+  {
+    "testCase": "User 1 - Bangalore user",
+    "firstName": "Vishnu",
+    "lastName": "Chinnakallepalli",
+    "street": "1-24/A, singasandra",
+    "city": "Bangalore",
+    "state": "Karnataka",
+    "zipCode": "560068",
+    "phone": "8882555778",
+    "ssn": "111222333",
+    "password": "VishnuCh@12",
+    "confirmPassword": "VishnuCh@12",
+    "isInvalid": false
+  },
+  {
+    "testCase": "User 2 - Mumbai user",
+    "firstName": "Rahul",
+    "lastName": "Sharma",
+    "street": "42, Marine Lines",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "zipCode": "400002",
+    "phone": "9876543210",
+    "ssn": "444555666",
+    "password": "Rahul@Secure1",
+    "confirmPassword": "Rahul@Secure1",
+    "isInvalid": false
+  },
+  {
+    "testCase": "User 3 - Delhi user",
+    "firstName": "Priya",
+    "lastName": "Verma",
+    "street": "B-12, Connaught Place",
+    "city": "New Delhi",
+    "state": "Delhi",
+    "zipCode": "110001",
+    "phone": "7701234567",
+    "ssn": "777888999",
+    "password": "Priya#Test99",
+    "confirmPassword": "Priya#Test99",
+    "isInvalid": false
+  },
+  {
+    "testCase": "User 4 - Invalid data",
+    "firstName": "^$$bsshsz&T&",
+    "lastName": "Tefy &5582 Ug",
+    "street": "1-24/A, singasandra, jdgjgjfgejfeefe dfefe",
+    "city": "Bangaloreee $@@#@#",
+    "state": "Karn$@#!$$!#ataka",
+    "zipCode": "pincode",
+    "phone": "00000122222",
+    "ssn": "11122902333",
+    "password": "Vish213132323222323232323232323232323nuCh@12",
+    "confirmPassword": "Vish213132323222323232323232323232323nuCh@12",
+    "isInvalid": true
+  }
+]

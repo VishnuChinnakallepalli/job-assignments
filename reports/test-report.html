@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ParaBank Sign Up — Test Report</title>
+  <style>
+    :root {
+      --ground:   #0C0E16;
+      --surface:  #13162A;
+      --surface2: #191D33;
+      --border:   #1E2340;
+      --text:     #E8EAF6;
+      --sub:      #6B7099;
+      --accent:   #00E5A0;
+      --fail:     #FF6B6B;
+      --flaky:    #FFB547;
+      --skip:     #7C8DB5;
+      --mono: ui-monospace,'Cascadia Code','Fira Code','Courier New',monospace;
+      --sans: -apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--ground);
+      color: var(--text);
+      font-family: var(--sans);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    /* ── Header ─────────────────────────────────────────── */
+    .header {
+      padding: 32px 48px 28px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .suite-eyebrow {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sub);
+      margin-bottom: 6px;
+    }
+    .suite-title {
+      font-size: 22px;
+      font-weight: 650;
+      letter-spacing: -0.025em;
+      color: var(--text);
+    }
+    .run-meta {
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--sub);
+      line-height: 2;
+    }
+    .run-meta span {
+      display: inline-block;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 3px;
+      padding: 1px 7px;
+      margin-left: 4px;
+      font-size: 10px;
+    }
+
+    /* ── Hero ───────────────────────────────────────────── */
+    .hero {
+      padding: 48px 48px 36px;
+      display: flex;
+      align-items: flex-end;
+      gap: 48px;
+      flex-wrap: wrap;
+    }
+    .rate-block { flex-shrink: 0; }
+    .rate-number {
+      font-family: var(--mono);
+      font-size: 104px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.05em;
+      color: var(--accent);
+      display: block;
+    }
+    .rate-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--sub);
+      margin-top: 8px;
+    }
+    .hero-sep {
+      width: 1px;
+      height: 88px;
+      background: var(--border);
+      flex-shrink: 0;
+      align-self: flex-end;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 36px;
+      padding-bottom: 6px;
+      flex-wrap: wrap;
+    }
+    .stat { display: flex; flex-direction: column; gap: 4px; }
+    .stat-val {
+      font-family: var(--mono);
+      font-size: 40px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+    }
+    .stat-lbl {
+      font-size: 10px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--sub);
+    }
+    .stat.total  .stat-val { color: var(--text); }
+    .stat.passed .stat-val { color: var(--accent); }
+    .stat.failed .stat-val { color: var(--fail); }
+    .stat.flaky  .stat-val { color: var(--flaky); }
+    .stat.skip   .stat-val { color: var(--skip); }
+
+    /* ── Progress bar ───────────────────────────────────── */
+    .prog-wrap { padding: 0 48px 40px; }
+    .prog-track {
+      height: 3px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .prog-fill {
+      height: 100%;
+      width: 0;
+      background: var(--accent);
+      border-radius: 2px;
+      box-shadow: 0 0 12px rgba(0,229,160,0.4);
+      transition: width 1.4s cubic-bezier(0.22,1,0.36,1);
+    }
+    .prog-foot {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--sub);
+    }
+
+    /* ── Test list ──────────────────────────────────────── */
+    .list-wrap { padding: 0 48px 56px; }
+    .list-label {
+      font-family: var(--mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sub);
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 6px;
+      overflow: hidden;
+    }
+    .card:hover { border-color: #252A50; }
+
+    .card-head {
+      display: grid;
+      grid-template-columns: 56px 1fr auto auto auto;
+      align-items: center;
+      gap: 14px;
+      padding: 14px 18px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .tc-id {
+      font-family: var(--mono);
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--accent);
+      background: rgba(0,229,160,0.07);
+      border: 1px solid rgba(0,229,160,0.18);
+      padding: 3px 0;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .tc-id.fail  { color:var(--fail);  background:rgba(255,107,107,0.07); border-color:rgba(255,107,107,0.18); }
+    .tc-id.flaky { color:var(--flaky); background:rgba(251,191,71,0.07);  border-color:rgba(251,191,71,0.18); }
+    .tc-id.skip  { color:var(--skip);  background:rgba(124,141,181,0.07); border-color:rgba(124,141,181,0.18); }
+
+    .tc-name { font-size: 13px; font-weight: 500; color: var(--text); }
+
+    .status-pill {
+      font-family: var(--mono);
+      font-size: 9px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .status-pill.passed  { color:var(--accent); background:rgba(0,229,160,0.09); }
+    .status-pill.failed  { color:var(--fail);   background:rgba(255,107,107,0.09); }
+    .status-pill.flaky   { color:var(--flaky);  background:rgba(251,191,71,0.09); }
+    .status-pill.skipped { color:var(--skip);   background:rgba(124,141,181,0.09); }
+
+    .tc-dur {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--sub);
+      white-space: nowrap;
+      text-align: right;
+      min-width: 48px;
+    }
+
+    .dur-bar { width: 72px; }
+    .dur-track { height: 2px; background: var(--border); border-radius: 1px; overflow: hidden; }
+    .dur-fill  { height: 100%; background: rgba(0,229,160,0.35); border-radius: 1px; }
+
+    /* ── Steps ──────────────────────────────────────────── */
+    .card-steps {
+      display: none;
+      border-top: 1px solid var(--border);
+      background: var(--surface2);
+      padding: 12px 18px 14px 88px;
+    }
+    .card-steps.open { display: block; }
+
+    .step {
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: baseline;
+      gap: 10px;
+      padding: 5px 0;
+      border-bottom: 1px solid rgba(30,35,64,0.6);
+      font-size: 12px;
+    }
+    .step:last-child { border-bottom: none; }
+
+    .kw {
+      font-family: var(--mono);
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .kw.given { color: var(--skip); }
+    .kw.when  { color: var(--flaky); }
+    .kw.then  { color: var(--accent); }
+    .kw.and   { color: var(--sub); }
+    .kw.but   { color: var(--sub); }
+
+    .step-txt { color: #8B93B8; }
+    .step-dur {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: #44496A;
+      white-space: nowrap;
+    }
+
+    .chevron {
+      display: inline-block;
+      font-style: normal;
+      font-size: 9px;
+      color: var(--sub);
+      transition: transform 0.2s ease;
+      margin-left: 4px;
+    }
+    .card.open .chevron { transform: rotate(90deg); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .prog-fill, .chevron { transition: none; }
+    }
+
+    @media (max-width: 680px) {
+      .header, .hero, .prog-wrap, .list-wrap { padding-left: 20px; padding-right: 20px; }
+      .rate-number { font-size: 72px; }
+      .card-head { grid-template-columns: 48px 1fr auto; gap: 10px; }
+      .dur-bar, .tc-dur { display: none; }
+      .card-steps { padding-left: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Header ─────────────────────────────────────────── -->
+  <header class="header">
+    <div>
+      <div class="suite-eyebrow">Test Execution Report · ParaBank</div>
+      <div class="suite-title">Sign Up — Feature Suite</div>
+    </div>
+    <div class="run-meta">
+      <div>27 Jun 2026 · 09:16 UTC <span>Chromium</span></div>
+      <div>playwright-bdd <span>v9.2</span> + POM <span>1 worker</span></div>
+    </div>
+  </header>
+
+  <!-- ── Hero ──────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="rate-block">
+      <span class="rate-number" id="rateNum">0%</span>
+      <div class="rate-label">pass rate</div>
+    </div>
+    <div class="hero-sep"></div>
+    <div class="hero-stats">
+      <div class="stat total">  <span class="stat-val">9</span><span class="stat-lbl">Total</span></div>
+      <div class="stat passed"> <span class="stat-val">9</span><span class="stat-lbl">Passed</span></div>
+      <div class="stat failed"> <span class="stat-val">0</span><span class="stat-lbl">Failed</span></div>
+      <div class="stat flaky">  <span class="stat-val">0</span><span class="stat-lbl">Flaky</span></div>
+      <div class="stat skip">   <span class="stat-val">0</span><span class="stat-lbl">Skipped</span></div>
+    </div>
+  </section>
+
+  <!-- ── Progress ───────────────────────────────────────── -->
+  <div class="prog-wrap">
+    <div class="prog-track"><div class="prog-fill" id="progFill"></div></div>
+    <div class="prog-foot">
+      <span>9 / 9 scenarios</span>
+      <span>1m 49.1s total duration</span>
+    </div>
+  </div>
+
+  <!-- ── Test List ──────────────────────────────────────── -->
+  <div class="list-wrap">
+    <div class="list-label">Scenarios</div>
+    <div id="testList"></div>
+  </div>
+
+  <script>
+    const MAX_DUR = 20896;
+
+    const TESTS = [
+      {
+        id: 'TC01', status: 'passed', dur: 3808,
+        name: 'Verify user can click on Register and see the Sign Up form',
+        steps: [
+          { title: 'Then the Sign Up form should be visible with all required fields', dur: 134 }
+        ]
+      },
+      {
+        id: 'TC02', status: 'passed', dur: 12589,
+        name: 'Verify user can fill all required fields and Register successfully',
+        steps: [
+          { title: 'When the user fills the registration form with random valid details', dur: 3884 },
+          { title: 'And the user clicks the Register button', dur: 1563 },
+          { title: 'Then a welcome message should be displayed for the registered user', dur: 24 }
+        ]
+      },
+      {
+        id: 'TC03', status: 'passed', dur: 7668,
+        name: 'Verify required field errors are shown when Register is clicked with empty form',
+        steps: [
+          { title: 'When the user clicks the Register button', dur: 1161 },
+          { title: 'Then all required field validation errors should be displayed', dur: 60 }
+        ]
+      },
+      {
+        id: 'TC04', status: 'passed', dur: 10007,
+        name: 'Verify behavior when invalid details are entered and submitted',
+        steps: [
+          { title: 'When the user fills the registration form with invalid details', dur: 2909 },
+          { title: 'And the user clicks the Register button', dur: 1168 },
+          { title: 'Then any validation errors on the page should be logged', dur: 16 }
+        ]
+      },
+      {
+        id: 'TC05', status: 'passed', dur: 11126,
+        name: 'Verify refreshing the page clears all entered registration details',
+        steps: [
+          { title: 'When the user fills the registration form with valid details', dur: 3388 },
+          { title: 'And the user refreshes the page', dur: 1040 },
+          { title: 'Then all registration form fields should be empty', dur: 27 }
+        ]
+      },
+      {
+        id: 'TC06', status: 'passed', dur: 10298,
+        name: 'Verify password mismatch error is shown',
+        steps: [
+          { title: 'When the user fills the registration form with mismatched passwords', dur: 2903 },
+          { title: 'And the user clicks the Register button', dur: 1036 },
+          { title: 'Then a password mismatch error should be displayed', dur: 14 }
+        ]
+      },
+      {
+        id: 'TC07', status: 'passed', dur: 10014,
+        name: 'Verify registration with an already registered username shows error',
+        steps: [
+          { title: 'When the user fills the registration form with valid details', dur: 2483 },
+          { title: 'And the user clicks the Register button', dur: 409 },
+          { title: 'And the user logs out', dur: 678 },
+          { title: 'And the user navigates back to the Register page', dur: 781 },
+          { title: 'And the user fills the registration form with the same username', dur: 2482 },
+          { title: 'And the user clicks the Register button', dur: 449 },
+          { title: 'Then a duplicate username error should be displayed', dur: 14 }
+        ]
+      },
+      {
+        id: 'TC08', status: 'passed', dur: 20896,
+        name: 'Verify user can update duplicate username to register successfully',
+        steps: [
+          { title: 'When the user fills the registration form with valid details', dur: 3318 },
+          { title: 'And the user clicks the Register button', dur: 969 },
+          { title: 'And the user logs out', dur: 1834 },
+          { title: 'And the user navigates back to the Register page', dur: 2921 },
+          { title: 'And the user fills the registration form with the same username', dur: 2630 },
+          { title: 'And the user clicks the Register button', dur: 920 },
+          { title: 'Then a duplicate username error should be displayed', dur: 26 },
+          { title: 'When the user updates to a new unique username', dur: 225 },
+          { title: 'And the user re-enters the password fields', dur: 457 },
+          { title: 'And the user clicks the Register button', dur: 917 },
+          { title: 'Then a welcome message should be displayed for the new username', dur: 20 }
+        ]
+      },
+      {
+        id: 'TC09', status: 'passed', dur: 19942,
+        name: 'Verify login with registered user credentials',
+        steps: [
+          { title: 'When the user fills the registration form with valid details', dur: 2861 },
+          { title: 'And the user clicks the Register button', dur: 1107 },
+          { title: 'And the user logs out', dur: 2034 },
+          { title: 'And the user navigates to the home page', dur: 1081 },
+          { title: 'And the user logs in with the registered credentials', dur: 6132 },
+          { title: 'Then the Accounts Overview page should be visible', dur: 16 },
+          { title: 'And the account balances should be printed to the console', dur: 3 }
+        ]
+      }
+    ];
+
+    const KEYWORDS = ['given','when','then','and','but'];
+
+    function fmtDur(ms) {
+      return ms >= 1000 ? (ms / 1000).toFixed(1) + 's' : ms + 'ms';
+    }
+
+    function getKw(title) {
+      const first = title.split(' ')[0].toLowerCase();
+      return KEYWORDS.includes(first) ? first : '';
+    }
+
+    function renderStep(s) {
+      const kw = getKw(s.title);
+      const rest = kw ? s.title.slice(kw.length + 1) : s.title;
+      return `<div class="step">
+        <span class="kw ${kw}">${kw.toUpperCase()}</span>
+        <span class="step-txt">${rest}</span>
+        <span class="step-dur">${fmtDur(s.dur)}</span>
+      </div>`;
+    }
+
+    function renderCard(t, i) {
+      const pct = Math.round((t.dur / MAX_DUR) * 100);
+      const idClass = t.status === 'passed' ? '' : t.status === 'failed' ? 'fail' : t.status === 'flaky' ? 'flaky' : 'skip';
+      const steps = t.steps.map(renderStep).join('');
+      return `
+      <div class="card" id="card${i}" onclick="toggle(${i})">
+        <div class="card-head">
+          <span class="tc-id ${idClass}">${t.id}</span>
+          <span class="tc-name">${t.name} <i class="chevron">&#9654;</i></span>
+          <span class="status-pill ${t.status}">${t.status}</span>
+          <span class="tc-dur">${fmtDur(t.dur)}</span>
+          <div class="dur-bar">
+            <div class="dur-track">
+              <div class="dur-fill" style="width:${pct}%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="card-steps" id="steps${i}">${steps}</div>
+      </div>`;
+    }
+
+    document.getElementById('testList').innerHTML = TESTS.map(renderCard).join('');
+
+    function toggle(i) {
+      const card  = document.getElementById('card'  + i);
+      const steps = document.getElementById('steps' + i);
+      const isOpen = steps.classList.contains('open');
+      steps.classList.toggle('open', !isOpen);
+      card.classList.toggle('open', !isOpen);
+    }
+
+    // Animate pass rate counter
+    const rateEl = document.getElementById('rateNum');
+    const animStart = performance.now();
+    const animDur = 1200;
+
+    function tick(now) {
+      const progress = Math.min((now - animStart) / animDur, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      rateEl.textContent = Math.round(eased * 100) + '%';
+      if (progress < 1) requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    // Animate progress bar
+    setTimeout(() => {
+      document.getElementById('progFill').style.width = '100%';
+    }, 100);
+  </script>
+</body>
+</html>

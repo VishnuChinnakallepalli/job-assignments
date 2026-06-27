@@ -1,0 +1,19 @@
+{
+  "name": "automation-playwright",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "bdd:gen": "bddgen",
+    "bdd:test": "bddgen && playwright test",
+    "test": "playwright test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.0.1",
+    "playwright-bdd": "^9.2.0"
+  }
+}
